@@ -12,8 +12,8 @@ class SearchConfig:
     File Path Storage Class
     """
 
-    POLLING_INTERVAL_MINIMUM: int = 5  # 5 MINUTES
-    RECOMMENDED_POLLING_INTERVAL: int = 10  # 10 MINUTES
+    POLLING_INTERVAL_MINIMUM: int = 1  # 1 second
+    RECOMMENDED_POLLING_INTERVAL: int = 600  # 10 MINUTES
     ERROR_MESSAGE: str = "No search days configured. Exiting"
     MINIMUM_CAMPSITES_FIRST_NOTIFY: int = 5
     MAXIMUM_NOTIFICATION_BATCH_SIZE: int = 20

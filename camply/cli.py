@@ -389,7 +389,7 @@ polling_interval_argument = click.option(
     default=None,
     type=click.INT,
     help="Enables continuous searching. How often to wait in between "
-    "checks (in minutes). Defaults to 10, cannot be less than 5.",
+    "checks (in seconds). Defaults to 600.",
 )
 
 _joined_notifications = [f"`{item}`" for item in CAMPSITE_NOTIFICATIONS.keys()]

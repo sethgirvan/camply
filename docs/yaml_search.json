@@ -142,7 +142,7 @@
     },
     "polling_interval": {
       "title": "Polling Interval",
-      "default": 10,
+      "default": 600,
       "type": "integer"
     },
     "notifications": {

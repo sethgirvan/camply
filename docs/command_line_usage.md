@@ -168,8 +168,7 @@ and a link to make the booking. Required parameters include `--start-date`, `--e
         matching campsites are found on the first try. Defaults to false which only sends the first5.
         [\*\*_example_](#continuously-searching-for-a-campsite)
 -   `--polling-interval`: `POLLING_INTERVAL`
-    -   Enables continuous searching. How often to wait in between checks (in minutes). Defaults to
-        10, cannot be less than 5.
+    -   Enables continuous searching. How often to wait in between checks (in seconds). Defaults to 600.
         [\*\*_example_](#look-for-weekend-campsite-availabilities)
 -   `--yaml-config`
     -   Rather than provide arguments to the command line utility, instead pass a file path to a YAML
@@ -572,7 +571,7 @@ camply campsites \
     --end-date 2023-08-01 \
     --weekends \
     --notifications email \
-    --polling-interval 5
+    --polling-interval 300
 ```
 
 !!! note

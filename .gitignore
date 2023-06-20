@@ -139,3 +139,6 @@ camply/providers/usedirect/*/*.json
 
 # Camply Requirements Files
 requirements/*.bak
+
+# ctags files
+tags

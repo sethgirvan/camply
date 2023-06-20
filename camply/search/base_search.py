@@ -324,28 +324,27 @@ class BaseCampingSearch(ABC):
         return matching_campgrounds
 
     @classmethod
-    def _get_polling_minutes(cls, polling_interval: Optional[int]) -> int:
+    def _get_polling_seconds(cls, polling_interval: Optional[int]) -> int:
         """
-        Return the Number of Minutes to Search
+        Return the search poll interval in seconds
 
         Parameters
         ----------
         polling_interval: Optional[int]
             Used with `continuous=True`, the amount of time to wait between searches.
-            Defaults to 10 if not provided, cannot be less than 5
+            Defaults to 600 if not provided, cannot be less than 1.
 
         Returns
         -------
         int
         """
         if polling_interval is None:
-            polling_interval = getenv(
-                "POLLING_INTERVAL", SearchConfig.RECOMMENDED_POLLING_INTERVAL
+            polling_interval = int(
+                getenv("POLLING_INTERVAL", SearchConfig.RECOMMENDED_POLLING_INTERVAL)
             )
         if int(polling_interval) < SearchConfig.POLLING_INTERVAL_MINIMUM:
             polling_interval = SearchConfig.POLLING_INTERVAL_MINIMUM
-        polling_interval_minutes = int(round(float(polling_interval), 2))
-        return polling_interval_minutes
+        return polling_interval
 
     def _continuous_search_retry(
         self,
@@ -386,17 +385,17 @@ class BaseCampingSearch(ABC):
         -------
         List[AvailableCampsite]
         """
-        polling_interval_minutes = self._get_polling_minutes(
+        polling_interval_seconds = self._get_polling_seconds(
             polling_interval=polling_interval
         )
         self.notifier = MultiNotifierProvider(provider=notification_provider)
         logger.info(
-            f"Searching for campsites every {polling_interval_minutes} minutes. "
+            f"Searching for campsites every {polling_interval_seconds} seconds. "
         )
         self.notifier.log_providers()
         retryer = tenacity.Retrying(
             retry=tenacity.retry_if_exception_type(CampsiteNotFoundError),
-            wait=tenacity.wait.wait_fixed(int(polling_interval_minutes) * 60),
+            wait=tenacity.wait.wait_fixed(polling_interval_seconds),
         )
         matching_campsites = retryer.__call__(
             fn=self._search_matching_campsites_available,
@@ -545,7 +544,7 @@ class BaseCampingSearch(ABC):
         -------
         List[AvailableCampsite]
         """
-        polling_interval_minutes = self._get_polling_minutes(
+        polling_interval_seconds = self._get_polling_seconds(
             polling_interval=polling_interval
         )
         continuous_search = True
@@ -568,7 +567,7 @@ class BaseCampingSearch(ABC):
             if search_once is True:
                 continuous_search = False
             elif search_forever is True:
-                sleep(int(polling_interval_minutes) * 60)
+                sleep(polling_interval_seconds)
             else:
                 continuous_search = False
         return list(self.campsites_found)
